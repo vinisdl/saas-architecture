@@ -21,7 +21,7 @@ Após subir os containers (`docker compose up -d`), acesse o Keycloak em http://
    - **Authentication flow**: marque **Standard flow** e **Direct access grants** se quiser.
 6. Em **Login settings** (ou na tela do client, dependendo da versão):
    - **Root URL**: `http://localhost:3000`.
-   - **Valid redirect URIs**: `http://localhost:3000/*`.
+   - **Valid redirect URIs**: `http://localhost:3000/*` (obrigatório para F5 em rotas como `/dashboard` e callback em `/login`).
    - **Valid post logout redirect URIs**: `http://localhost:3000/*`.
    - **Web origins** (obrigatório para CORS): coloque **`http://localhost:3000`** (exatamente, sem barra no final).  
      Esse campo define quais origens podem chamar o Keycloak (ex.: `/token`) a partir do navegador. Se estiver vazio, você verá erro de CORS ao fazer login.  
@@ -91,11 +91,14 @@ Para a API listar usuários e definir o atributo `tenant_id` nos usuários, ela 
 2. **Client ID**: `saas-backend`.
 3. **Client type**: `OpenID Connect`.
 4. **Client authentication**: **ON** (confidential).
-5. Avançar. Em **Capability config**, marque **Service accounts roles** (ou o que permitir client credentials).
-6. Salve.
-7. Vá na aba **Credentials** e copie o **Client secret**.
-8. Na aba **Service account roles** (ou **Roles** do client), atribua ao service account as roles necessárias para usar a Admin API:
-   - Em **Realm roles**, adicione por exemplo **realm-management** → **manage-users** (para listar e editar usuários). Ajuste conforme as permissões do seu Keycloak.
+5. Avançar. Em **Capability config**, marque **Service accounts roles** (ou **Service accounts** / opção que permita client credentials). Salve.
+6. Vá na aba **Credentials** e copie o **Client secret** (configure em `Keycloak:Admin:ClientSecret` no backend).
+7. **Permissões da Admin API (evita 403 Forbidden):** abra a aba **Service account roles** (ou **Service account** → **Role mapping**). Clique em **Assign role**.
+   - Filtre por **realm roles** (ou selecione o client **realm-management**).
+   - Atribua as roles:
+     - **view-users** — obrigatório para a API listar usuários (`GET /api/admin/users`).
+     - **manage-users** — obrigatório para a API alterar atributos (ex.: atribuir tenant ao usuário).
+   - Confirme. Sem essas roles, a API retornará 403 ao acessar a Admin API do Keycloak.
 
 Configure no backend (variáveis de ambiente ou `appsettings.json`):
 

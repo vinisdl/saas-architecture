@@ -39,7 +39,10 @@ export function KeycloakProvider({
   }, [keycloak])
 
   const login = () => keycloak.login()
-  const logout = () => keycloak.logout()
+  const logout = () => {
+    const redirectUri = typeof window !== 'undefined' ? `${window.location.origin}/` : undefined
+    keycloak.logout({ redirectUri })
+  }
   const token = keycloak.token
 
   return (

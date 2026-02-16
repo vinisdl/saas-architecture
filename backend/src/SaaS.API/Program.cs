@@ -2,6 +2,7 @@ using Grafana.OpenTelemetry;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using SaaS.API;
 using SaaS.Application;
 using SaaS.Infrastructure;
 using SaaS.Infrastructure.Persistence;
@@ -31,6 +32,8 @@ var validIssuers = (validIssuersList != null && validIssuersList.Length > 0)
     ? validIssuersList.Select(u => u?.TrimEnd('/')).Where(u => !string.IsNullOrEmpty(u)).ToArray()
     : new[] { keycloakAuthority.TrimEnd('/') };
 
+var authorityUri = new Uri(keycloakAuthority.TrimEnd('/'));
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -45,6 +48,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuers = validIssuers,
             ClockSkew = TimeSpan.FromSeconds(30)
         };
+        options.BackchannelHttpHandler = new KeycloakBackchannelHandler(authorityUri);
     });
 
 var adminUserId = builder.Configuration["Keycloak:AdminUserId"] ?? "";

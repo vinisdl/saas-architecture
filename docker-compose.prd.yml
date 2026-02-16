@@ -87,6 +87,10 @@ services:
       # Aceitar tokens com issuer localhost (navegador) ou keycloak (rede interna)
       Keycloak__ValidIssuers__0: "http://keycloak:8080/realms/saas"
       Keycloak__ValidIssuers__1: "http://localhost:8080/realms/saas"
+      Keycloak__Admin__ServerUrl: "http://keycloak:8080"
+      Keycloak__Admin__Realm: "saas"
+      Keycloak__Admin__ClientId: "saas-backend"
+      Keycloak__Admin__ClientSecret: "${KEYCLOAK_ADMIN_CLIENT_SECRET:-j7MMwHjFcpPdrhMpxTmHDWhGYOLm2T3W}"
       RabbitMQ__HostName: rabbitmq
       RabbitMQ__Port: "5672"
       RabbitMQ__UserName: guest

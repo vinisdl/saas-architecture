@@ -39,7 +39,7 @@ function AppRoutes() {
           authenticated ? (
             <Dashboard />
           ) : (
-            <Navigate to="/login" replace />
+            <Navigate to="/login" replace state={{ from: { pathname: '/dashboard' } }} />
           )
         }
       />
@@ -49,7 +49,7 @@ function AppRoutes() {
           authenticated ? (
             <AdminLayout />
           ) : (
-            <Navigate to="/login" replace />
+            <Navigate to="/login" replace state={{ from: { pathname: '/admin' } }} />
           )
         }
       >
