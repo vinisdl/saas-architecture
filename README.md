@@ -6,6 +6,7 @@ Arquitetura de referência para aplicações SaaS multi-tenant: backend em .NET,
 
 - [Funcionalidades](#funcionalidades)
 - [Stack](#stack)
+- [Arquitetura](#arquitetura)
 - [Pré-requisitos](#pré-requisitos)
 - [Quick start](#quick-start)
 - [Desenvolvimento local](#desenvolvimento-local)
@@ -37,6 +38,52 @@ Arquitetura de referência para aplicações SaaS multi-tenant: backend em .NET,
 | Infraestrutura | Docker, Docker Compose       |
 
 Versões detalhadas em [docs/versions.md](docs/versions.md).
+
+## Arquitetura
+
+```mermaid
+flowchart TB
+  subgraph usuario [Usuário]
+    Browser[Navegador]
+  end
+
+  subgraph aplicacao [Aplicação]
+    Frontend[Frontend React]
+    Backend[Backend .NET API]
+  end
+
+  subgraph dados [Dados e Auth]
+    Postgres[(PostgreSQL)]
+    Keycloak[Keycloak]
+  end
+
+  subgraph mensageria [Mensageria]
+    RabbitMQ[RabbitMQ]
+  end
+
+  subgraph observabilidade [Observabilidade]
+    Alloy[Grafana Alloy]
+  end
+
+  subgraph cloud [Grafana Cloud]
+    Tempo[Traces]
+    Mimir[Metrics]
+  end
+
+  Browser --> Frontend
+  Frontend -->|HTTP / API| Backend
+  Frontend -->|OTLP proxy| Backend
+  Backend --> Postgres
+  Backend --> Keycloak
+  Backend --> RabbitMQ
+  Backend -->|OTLP gRPC| Alloy
+  Backend -->|OTLP HTTP proxy| Alloy
+  Alloy --> Tempo
+  Alloy --> Mimir
+```
+
+- O **frontend** consome a API e envia traces ao backend (proxy), que encaminha ao Alloy.
+- O **backend** envia telemetria (traces, métricas, logs) ao Alloy via OTLP; o Alloy encaminha ao Grafana Cloud.
 
 ## Pré-requisitos
 
