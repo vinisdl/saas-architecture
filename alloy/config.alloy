@@ -1,0 +1,25 @@
+// Grafana Alloy: recebe OTLP das aplicações e envia para Grafana Cloud.
+// Variáveis de ambiente: GRAFANA_CLOUD_OTLP_ENDPOINT, GRAFANA_CLOUD_OTLP_AUTH (Basic base64(instanceId:apiKey))
+
+otelcol.receiver.otlp "default" {
+  grpc {
+    endpoint = "0.0.0.0:4317"
+  }
+  http {
+    endpoint = "0.0.0.0:4318"
+  }
+  output {
+    metrics = [otelcol.exporter.otlphttp.cloud.input]
+    logs    = [otelcol.exporter.otlphttp.cloud.input]
+    traces  = [otelcol.exporter.otlphttp.cloud.input]
+  }
+}
+
+otelcol.exporter.otlphttp "cloud" {
+  client {
+    endpoint = env("GRAFANA_CLOUD_OTLP_ENDPOINT")
+    headers = {
+      "Authorization" = "Basic " + env("GRAFANA_CLOUD_OTLP_AUTH")
+    }
+  }
+}

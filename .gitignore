@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+**/bin/
+**/obj/
+**/out/
+*.user
+*.suo
+*.cache
+.vs/
+.idea/
+*.rsuser
+*.sln.docstates
+
+# Build
+dist/
+build/
+*.dll
+*.pdb
+*.exe
+*.nupkg
+*.log
+
+# Environment
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+*.swp
+*.swo
+*~
+
+# Test / coverage
+coverage/
+*.lcov
+TestResults/
+
+# Misc
+*.bak
+*.tmp

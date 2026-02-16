@@ -1,0 +1,124 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: saas-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: saas
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: saas-keycloak
+    command: start-dev
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/saas
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
+      # Usar localhost nas URLs geradas pelo Keycloak (evita "We're sorry" ao acessar do navegador)
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: "8080"
+      KC_HOSTNAME_STRICT: "false"
+      KC_HTTP_ENABLED: "true"
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/8080;echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3;cat <&3 | grep -q '200 OK'"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: saas-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  alloy:
+    image: grafana/alloy:latest
+    container_name: saas-alloy
+    command: ["run", "--server.http.listen-addr=0.0.0.0:12345", "/etc/alloy/config.alloy"]
+    volumes:
+      - ./alloy/config.alloy:/etc/alloy/config.alloy:ro
+    ports:
+      - "4317:4317"   # OTLP gRPC
+      - "4318:4318"   # OTLP HTTP
+      - "12345:12345" # Alloy UI
+    environment:
+      GRAFANA_CLOUD_OTLP_ENDPOINT: ${GRAFANA_CLOUD_OTLP_ENDPOINT:-}
+      GRAFANA_CLOUD_OTLP_AUTH: ${GRAFANA_CLOUD_OTLP_AUTH:-}
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: src/SaaS.API/Dockerfile
+    container_name: saas-backend
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=postgres;Database=saas;Username=postgres;Password=postgres"
+      Keycloak__Authority: "http://keycloak:8080/realms/saas"
+      Keycloak__Audience: "account"
+      # Aceitar tokens com issuer localhost (navegador) ou keycloak (rede interna)
+      Keycloak__ValidIssuers__0: "http://keycloak:8080/realms/saas"
+      Keycloak__ValidIssuers__1: "http://localhost:8080/realms/saas"
+      RabbitMQ__HostName: rabbitmq
+      RabbitMQ__Port: "5672"
+      RabbitMQ__UserName: guest
+      RabbitMQ__Password: guest
+      ASPNETCORE_URLS: "http://+:8080"
+      OTEL_SERVICE_NAME: saas-backend
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://alloy:4317
+      OTEL_EXPORTER_OTLP_PROTOCOL: grpc
+      OTEL_RESOURCE_ATTRIBUTES: deployment.environment=docker,service.namespace=saas
+      TelemetryProxy__AlloyOtlpHttpUrl: http://alloy:4318
+    ports:
+      - "5000:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+      alloy:
+        condition: service_started
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: saas-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
