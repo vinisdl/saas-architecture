@@ -28,7 +28,10 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route
+        path="/"
+        element={authenticated ? <Navigate to="/dashboard" replace /> : <Home />}
+      />
       <Route path="/login" element={<Login />} />
       <Route
         path="/dashboard"

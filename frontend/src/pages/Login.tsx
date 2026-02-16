@@ -14,5 +14,5 @@ export default function Login() {
     }
   }, [authenticated, login, navigate])
 
-  return <div className="page">Redirecionando para login...</div>
+  return <div className="page-redirect">Redirecionando para login...</div>
 }

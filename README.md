@@ -98,7 +98,7 @@ Com Docker e Docker Compose instalados:
 ```bash
 git clone <url-do-repositorio>
 cd SaaS-Architecture
-docker compose up -d
+docker compose -f docker-compose.prd.yml up -d
 ```
 
 Após subir os containers:
@@ -115,7 +115,21 @@ Para enviar telemetria ao Grafana Cloud, configure as variáveis do Alloy confor
 
 ## Desenvolvimento local
 
-### Backend
+### Docker com hot reload (recomendado)
+
+Para subir toda a stack em modo desenvolvimento com **hot reload** no backend (dotnet watch) e no frontend (Vite HMR):
+
+```bash
+docker compose -f docker-compose.dev.yml up --build
+```
+
+- **Backend:** alterações em código C# disparam recompilação e reinício automático (`dotnet watch`).
+- **Frontend:** alterações em código React/TS disparam atualização no navegador sem full reload (HMR).
+- Código é montado por volume; não é necessário rebuild para ver mudanças.
+
+URLs: Frontend http://localhost:3000 | API http://localhost:5000 | Keycloak http://localhost:8080.
+
+### Backend (sem Docker)
 
 ```bash
 cd backend
@@ -123,9 +137,9 @@ dotnet restore
 dotnet run --project src/SaaS.API
 ```
 
-Requer PostgreSQL e Keycloak (por exemplo via `docker compose up -d postgres keycloak rabbitmq alloy`).
+Requer PostgreSQL e Keycloak (por exemplo via `docker compose -f docker-compose.prd.yml up -d postgres keycloak rabbitmq alloy`).
 
-### Frontend
+### Frontend (sem Docker)
 
 ```bash
 cd frontend
@@ -139,7 +153,7 @@ Defina as variáveis de ambiente (ex.: `VITE_API_URL`, `VITE_KEYCLOAK_*`). Use `
 
 - **Backend:** `backend/src/SaaS.API/appsettings.json` e `appsettings.Development.json` (connection strings, Keycloak, RabbitMQ, OpenTelemetry/TelemetryProxy).
 - **Frontend:** variáveis `VITE_*` (API URL, Keycloak, opcionalmente `VITE_OTEL_EXPORTER_OTLP_ENDPOINT`).
-- **Docker:** variáveis no `docker-compose.yml` ou em arquivo `.env` na raiz (ex.: credenciais Grafana Cloud para o Alloy).
+- **Docker:** variáveis no `docker-compose.prd.yml` / `docker-compose.dev.yml` ou em arquivo `.env` na raiz (ex.: credenciais Grafana Cloud para o Alloy).
 
 ## Estrutura do projeto
 
@@ -149,7 +163,8 @@ SaaS-Architecture/
 ├── frontend/                # Aplicação React (Vite)
 ├── alloy/                   # Config do Grafana Alloy (OTLP → Grafana Cloud)
 ├── docs/                    # Documentação (setup Keycloak, Grafana Cloud, versões)
-├── docker-compose.yml
+├── docker-compose.prd.yml   # Stack para produção/build final
+├── docker-compose.dev.yml   # Stack para desenvolvimento (hot reload backend + frontend)
 └── README.md
 ```
 

@@ -1,0 +1,14 @@
+# Desenvolvimento com hot reload (dotnet watch)
+FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine
+WORKDIR /app
+
+# Restore depende dos .csproj; o código fonte é montado via volume
+COPY ["src/SaaS.Domain/SaaS.Domain.csproj", "src/SaaS.Domain/"]
+COPY ["src/SaaS.Application/SaaS.Application.csproj", "src/SaaS.Application/"]
+COPY ["src/SaaS.Infrastructure/SaaS.Infrastructure.csproj", "src/SaaS.Infrastructure/"]
+COPY ["src/SaaS.API/SaaS.API.csproj", "src/SaaS.API/"]
+
+RUN dotnet restore "src/SaaS.API/SaaS.API.csproj"
+
+# Volume monta o backend por cima; restore ao subir e depois watch
+CMD ["sh", "-c", "dotnet restore src/SaaS.API/SaaS.API.csproj && dotnet watch run --project src/SaaS.API/SaaS.API.csproj --urls http://+:8080 --no-launch-profile"]

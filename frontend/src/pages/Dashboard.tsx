@@ -1,6 +1,5 @@
 import {
   Button,
-  Card,
   Spinner,
   Title3,
   MessageBar,
@@ -16,6 +15,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useKeycloak } from '../auth/KeycloakContext'
 import { useMe } from '../hooks/useMe'
+import AppLayout from '../components/AppLayout'
 
 const API_BASE = import.meta.env.VITE_API_URL ?? '/api'
 
@@ -27,7 +27,7 @@ type TenantDto = {
 }
 
 export default function Dashboard() {
-  const { token, logout } = useKeycloak()
+  const { token } = useKeycloak()
   const { me } = useMe()
   const navigate = useNavigate()
   const [tenants, setTenants] = useState<TenantDto[]>([])
@@ -55,23 +55,19 @@ export default function Dashboard() {
   }, [token])
 
   return (
-    <div style={{ padding: 24, maxWidth: 800 }}>
-      <Card>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
-          <Title3>Dashboard</Title3>
-          <div style={{ display: 'flex', gap: 8 }}>
-            <Button onClick={() => navigate('/')}>Voltar</Button>
-            {me?.isAdmin && (
-              <Button appearance="primary" onClick={() => navigate('/admin')}>
-                Administração
-              </Button>
-            )}
-            <Button appearance="secondary" onClick={() => logout()}>
-              Sair
+    <AppLayout title="Dashboard" activeNav="dashboard">
+      <div className="card-admin">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, marginBottom: 16 }}>
+          <Title3 style={{ margin: 0 }}>Meus tenants</Title3>
+          {me?.isAdmin && (
+            <Button appearance="primary" onClick={() => navigate('/admin/tenants')}>
+              Administração
             </Button>
-          </div>
+          )}
         </div>
-        <p>Chamada autenticada à API (lista de tenants).</p>
+        <p style={{ color: 'var(--neutral-text)', margin: '0 0 1rem 0', fontSize: '0.9375rem' }}>
+          Chamada autenticada à API (lista de tenants).
+        </p>
 
         {loading && <Spinner label="Carregando..." />}
         {error && (
@@ -80,7 +76,7 @@ export default function Dashboard() {
           </MessageBar>
         )}
         {!loading && !error && tenants.length === 0 && (
-          <p>Nenhum tenant cadastrado. Acesse a área Administração para criar um.</p>
+          <p style={{ color: 'var(--neutral-text)' }}>Nenhum tenant cadastrado. Acesse a área Administração para criar um.</p>
         )}
         {!loading && !error && tenants.length > 0 && (
           <Table>
@@ -102,7 +98,7 @@ export default function Dashboard() {
             </TableBody>
           </Table>
         )}
-      </Card>
-    </div>
+      </div>
+    </AppLayout>
   )
 }

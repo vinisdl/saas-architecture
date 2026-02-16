@@ -1,6 +1,5 @@
 import {
   Button,
-  Card,
   Spinner,
   Title3,
   MessageBar,
@@ -122,7 +121,7 @@ export default function AdminTenants() {
   const editId = useId('edit-dialog')
 
   return (
-    <Card>
+    <div className="card-admin">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <Title3>Tenants</Title3>
         <Dialog open={createOpen} onOpenChange={(_, d) => setCreateOpen(d.open)}>
@@ -235,6 +234,6 @@ export default function AdminTenants() {
           </DialogBody>
         </DialogSurface>
       </Dialog>
-    </Card>
+    </div>
   )
 }

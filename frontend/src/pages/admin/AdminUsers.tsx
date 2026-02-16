@@ -1,6 +1,5 @@
 import {
   Button,
-  Card,
   Spinner,
   Title3,
   MessageBar,
@@ -118,8 +117,8 @@ export default function AdminUsers() {
   const tenantName = (id: string) => tenants.find((t) => t.id === id)?.name ?? id
 
   return (
-    <Card>
-      <Title3 style={{ marginBottom: 16 }}>Usuários</Title3>
+    <div className="card-admin">
+      <Title3 style={{ marginBottom: 16, marginTop: 0 }}>Usuários</Title3>
       <p>Lista de usuários do Keycloak. Atribua um tenant para dar acesso.</p>
 
       {error && (
@@ -200,6 +199,6 @@ export default function AdminUsers() {
           </DialogBody>
         </DialogSurface>
       </Dialog>
-    </Card>
+    </div>
   )
 }

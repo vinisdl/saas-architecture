@@ -1,4 +1,4 @@
-import { Button, Card, Title3 } from '@fluentui/react-components'
+import { Button, Title3 } from '@fluentui/react-components'
 import { useNavigate } from 'react-router-dom'
 import { useKeycloak } from '../auth/KeycloakContext'
 import { useMe } from '../hooks/useMe'
@@ -9,17 +9,17 @@ export default function Home() {
   const navigate = useNavigate()
 
   return (
-    <div style={{ padding: 24, maxWidth: 640 }}>
-      <Card>
-        <Title3>SaaS Multi-tenant</Title3>
+    <div className="page-center">
+      <div className="card-admin">
+        <Title3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.5rem' }}>SaaS Multi-tenant</Title3>
         <p>Bem-vindo. Backend em .NET (Hexagonal + CQRS), Frontend em React, Keycloak.</p>
         {authenticated ? (
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center' }}>
             <Button appearance="primary" onClick={() => navigate('/dashboard')}>
               Ir para Dashboard
             </Button>
             {me?.isAdmin && (
-              <Button appearance="primary" onClick={() => navigate('/admin')}>
+              <Button appearance="primary" onClick={() => navigate('/admin/tenants')}>
                 Administração
               </Button>
             )}
@@ -32,7 +32,7 @@ export default function Home() {
             Entrar com Keycloak
           </Button>
         )}
-      </Card>
+      </div>
     </div>
   )
 }
