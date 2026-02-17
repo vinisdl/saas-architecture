@@ -1,10 +1,10 @@
 import { Button, Title3 } from '@fluentui/react-components'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useKeycloak } from '../auth/KeycloakContext'
 import { useMe } from '../hooks/useMe'
 
 export default function Home() {
-  const { authenticated, login, logout } = useKeycloak()
+  const { authenticated, login, loginWithGoogle, logout } = useKeycloak()
   const { me } = useMe()
   const navigate = useNavigate()
 
@@ -28,9 +28,17 @@ export default function Home() {
             </Button>
           </div>
         ) : (
-          <Button appearance="primary" onClick={() => login()}>
-            Entrar com Keycloak
-          </Button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'center' }}>
+            <Button appearance="primary" onClick={() => login()}>
+              Entrar com Keycloak
+            </Button>
+            <Button appearance="secondary" onClick={() => loginWithGoogle()}>
+              Entrar com Google
+            </Button>
+            <p style={{ margin: 0 }}>
+              <Link to="/signup">Cadastrar</Link>
+            </p>
+          </div>
         )}
       </div>
     </div>

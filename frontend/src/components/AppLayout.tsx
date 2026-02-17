@@ -1,4 +1,4 @@
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useKeycloak } from '../auth/KeycloakContext'
 import { useMe } from '../hooks/useMe'
 
@@ -37,18 +37,12 @@ type AppLayoutProps = {
 
 export default function AppLayout({ title, children, activeNav = 'dashboard' }: AppLayoutProps) {
   const navigate = useNavigate()
-  const location = useLocation()
   const { logout } = useKeycloak()
   const { me } = useMe()
 
-  const getInitials = (name: string | undefined) => {
-    if (!name) return '?'
-    return name
-      .split(/\s+/)
-      .map((s) => s[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2)
+  const getInitials = (sub: string | undefined) => {
+    if (!sub) return '?'
+    return sub.slice(0, 2).toUpperCase()
   }
 
   return (
@@ -57,10 +51,10 @@ export default function AppLayout({ title, children, activeNav = 'dashboard' }: 
         <div className="sidebar-brand">SaaS Admin</div>
         {me && (
           <div className="sidebar-user">
-            <div className="sidebar-user-avatar">{getInitials(me.name ?? me.preferred_username)}</div>
+            <div className="sidebar-user-avatar">{getInitials(me.sub)}</div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontWeight: 600, color: 'var(--sidebar-text)' }}>
-                {me.name ?? me.preferred_username ?? 'Usuário'}
+                Usuário
               </div>
               <div style={{ fontSize: '0.75rem', color: 'var(--sidebar-text-muted)' }}>
                 {me.isAdmin ? 'Administrador' : 'Usuário'}

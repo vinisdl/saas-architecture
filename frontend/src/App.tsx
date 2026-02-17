@@ -5,6 +5,7 @@ import { KeycloakProvider, useKeycloak } from './auth/KeycloakContext'
 import Home from './pages/Home'
 import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
+import Signup from './pages/Signup'
 import AdminLayout from './pages/admin/AdminLayout'
 import AdminTenants from './pages/admin/AdminTenants'
 import AdminUsers from './pages/admin/AdminUsers'
@@ -33,6 +34,7 @@ function AppRoutes() {
         element={authenticated ? <Navigate to="/dashboard" replace /> : <Home />}
       />
       <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
       <Route
         path="/dashboard"
         element={

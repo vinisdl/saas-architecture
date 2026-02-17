@@ -3,6 +3,7 @@ const API_BASE = import.meta.env.VITE_API_URL ?? '/api'
 export type MeResponse = {
   sub: string
   isAdmin: boolean
+  tenantId?: string
 }
 
 export async function fetchMe(token: string | undefined): Promise<MeResponse | null> {

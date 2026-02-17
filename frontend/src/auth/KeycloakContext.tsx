@@ -12,6 +12,7 @@ type KeycloakContextValue = {
   initialized: boolean
   authenticated: boolean
   login: () => void
+  loginWithGoogle: () => void
   logout: () => void
   token: string | undefined
 }
@@ -39,6 +40,7 @@ export function KeycloakProvider({
   }, [keycloak])
 
   const login = () => keycloak.login()
+  const loginWithGoogle = () => keycloak.login({ idpHint: 'google' })
   const logout = () => {
     const redirectUri = typeof window !== 'undefined' ? `${window.location.origin}/` : undefined
     keycloak.logout({ redirectUri })
@@ -52,6 +54,7 @@ export function KeycloakProvider({
         initialized,
         authenticated,
         login,
+        loginWithGoogle,
         logout,
         token,
       }}

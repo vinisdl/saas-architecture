@@ -38,4 +38,13 @@ public sealed class TenantRepository : ITenantRepository
     {
         return await _db.Tenants.OrderBy(t => t.Name).ToListAsync(cancellationToken);
     }
+
+    public async Task EnsureDefaultTenantAsync(string slug, string name, CancellationToken cancellationToken = default)
+    {
+        if (await _db.Tenants.AnyAsync(t => t.Slug == slug, cancellationToken))
+            return;
+        var tenant = Tenant.Create(name, slug);
+        await _db.Tenants.AddAsync(tenant, cancellationToken);
+        await _db.SaveChangesAsync(cancellationToken);
+    }
 }

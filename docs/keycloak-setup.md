@@ -106,6 +106,8 @@ Configure no backend (variáveis de ambiente ou `appsettings.json`):
 - `Keycloak:Admin:Realm`: `saas`.
 - `Keycloak:Admin:ClientId`: `saas-backend`.
 - `Keycloak:Admin:ClientSecret`: o secret copiado do client.
+- `Keycloak:DefaultRole`: nome da realm role atribuída a novos usuários no cadastro (ex.: `user`). Opcional; se não configurado, nenhuma role é atribuída automaticamente.
+- `Keycloak:DefaultTenantSlug`: slug do tenant padrão para novos usuários (ex.: `default`). A API cria esse tenant na subida se não existir.
 
 Exemplo em `appsettings.Development.json` (não versionar o secret em produção):
 
@@ -123,6 +125,41 @@ Exemplo em `appsettings.Development.json` (não versionar o secret em produção
 ```
 
 Sem o client **saas-backend** e o secret configurados, a listagem de usuários e a atribuição de tenant na área Administração falharão (a API não conseguirá obter token para a Admin API).
+
+### 5.3 Política de senha (cadastro via formulário)
+
+O cadastro de usuários via formulário usa a **Keycloak Admin API** para criar o usuário. A senha é validada pelo Keycloak conforme a **política de senha do realm**.
+
+1. **Realm settings** → aba **Security defenses** (ou **Realm settings** → **Security**) → **Password policy**.
+2. Adicione as políticas desejadas (ex.: **Minimum length** 8, **Not username**, **Not common passwords**).
+3. As mensagens de erro de validação (ex.: senha fraca) retornadas pela API ao criar o usuário devem ser tratadas pelo backend e exibidas de forma clara no frontend.
+
+### 5.4 Papel padrão para novos usuários
+
+Para que novos usuários recebam automaticamente uma realm role (ex.: `user`):
+
+1. **Realm roles** (menu lateral) → **Create role**.
+2. **Role name**: `user` (ou o nome configurado em `Keycloak:DefaultRole`).
+3. Salve. A API atribui essa role ao criar usuários via `POST /api/auth/register`.
+
+### 5.5 Identity Provider Google (login social)
+
+Para permitir **Entrar com Google**:
+
+1. **Identity providers** (menu lateral) → **Add provider** → **Google**.
+2. Preencha **Client ID** e **Client secret** (obtidos no [Google Cloud Console](https://console.cloud.google.com/) em credenciais OAuth 2.0).
+3. **Alias**: deixe `google` (o frontend usa `keycloak.login({ idpHint: 'google' })`).
+4. Salve. Configure os **Valid redirect URIs** no Google conforme a URL de callback do Keycloak (ex.: `http://localhost:8080/realms/saas/broker/google/endpoint`).
+5. Em **First login flow**, pode usar **first broker login**; para vincular conta existente ao Google, ative **Account linking** nas opções do IdP.
+
+### 5.6 "Update Account Information" a cada login
+
+Se o Keycloak pedir **nome e sobrenome** a cada login:
+
+- **Usuários criados pela API** (cadastro via formulário): a API já envia `requiredActions: []` e nome/sobrenome, então não deve aparecer.
+- **Usuários criados pelo Google (ou já existentes)**:
+  - Ao acessar a aplicação, o backend chama `GET /api/me`. Nessa chamada, a API preenche **firstName** e **lastName** no Keycloak a partir do token (claims `given_name` e `family_name`) e remove a ação **UPDATE_PROFILE**. Faça login e deixe o frontend carregar (ex.: abrir o Dashboard) uma vez; na próxima sessão o Keycloak não deve mais pedir.
+- **Desativar no realm (opcional):** **Realm settings** → **Required actions** → desmarque **Set as default action** em **Update profile** para que novos usuários (ex.: criados por IdP) não recebam essa ação por padrão.
 
 ---
 

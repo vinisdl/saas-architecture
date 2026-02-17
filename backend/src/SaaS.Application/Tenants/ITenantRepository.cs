@@ -10,4 +10,5 @@ public interface ITenantRepository
     Task UpdateAsync(Tenant tenant, CancellationToken cancellationToken = default);
     Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<Tenant>> ListAsync(CancellationToken cancellationToken = default);
+    Task EnsureDefaultTenantAsync(string slug, string name, CancellationToken cancellationToken = default);
 }
