@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace SaaS.API.Controllers;
 
@@ -21,6 +22,7 @@ public class TelemetryController : ControllerBase
     }
 
     [HttpPost("v1/traces")]
+    [EnableRateLimiting("telemetry")]
     public async Task<IActionResult> ForwardTraces(CancellationToken cancellationToken)
     {
         var baseUrl = _configuration["TelemetryProxy:AlloyOtlpHttpUrl"]?.TrimEnd('/');

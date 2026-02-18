@@ -184,7 +184,7 @@ async function main() {
     log('Client scope "tenant_claim" already exists.');
   }
 
-  // 6. Add tenant_claim to saas-frontend default client scopes
+  // 6. Add tenant_claim to saas-frontend and saas-backend default client scopes
   if (tenantScopeId) {
     const frontendList = await api(token, 'GET', `${realmPath}/clients?clientId=saas-frontend`);
     const frontendClients = JSON.parse(frontendList.text);
@@ -194,6 +194,14 @@ async function main() {
       if (!defaultIds.includes(tenantScopeId)) {
         await api(token, 'PUT', `${realmPath}/clients/${frontendClients[0].id}/default-client-scopes/${tenantScopeId}`);
         log('tenant_claim added to saas-frontend default scopes.');
+      }
+    }
+    if (backendClientId) {
+      const backendDefaultScopes = await api(token, 'GET', `${realmPath}/clients/${backendClientId}/default-client-scopes`);
+      const backendDefaultIds = backendDefaultScopes.ok ? JSON.parse(backendDefaultScopes.text).map((s) => s.id) : [];
+      if (!backendDefaultIds.includes(tenantScopeId)) {
+        await api(token, 'PUT', `${realmPath}/clients/${backendClientId}/default-client-scopes/${tenantScopeId}`);
+        log('tenant_claim added to saas-backend default scopes.');
       }
     }
   }

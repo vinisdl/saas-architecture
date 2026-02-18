@@ -38,6 +38,17 @@ builder.Services.AddRateLimiter(options =>
                 QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.OldestFirst,
                 QueueLimit = 0
             }));
+    // SEC-004: rate limit no proxy de telemetria para evitar abuso e sobrecarga do backend/Alloy
+    options.AddPolicy("telemetry", context =>
+        System.Threading.RateLimiting.RateLimitPartition.GetFixedWindowLimiter(
+            context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+            _ => new System.Threading.RateLimiting.FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 60,
+                Window = TimeSpan.FromMinutes(1),
+                QueueProcessingOrder = System.Threading.RateLimiting.QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            }));
 });
 
 builder.Services.AddOpenTelemetry()

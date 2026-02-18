@@ -7,7 +7,6 @@ namespace SaaS.Infrastructure.TenantContext;
 public sealed class HttpTenantContext : ITenantContext
 {
     private const string TenantIdClaim = "tenant_id";
-    private const string TenantIdHeader = "X-Tenant-Id";
 
     private readonly IHttpContextAccessor _httpContextAccessor;
     private Guid? _tenantId;
@@ -32,13 +31,6 @@ public sealed class HttpTenantContext : ITenantContext
             if (!string.IsNullOrEmpty(claim) && Guid.TryParse(claim, out var fromClaim))
             {
                 _tenantId = fromClaim;
-                return _tenantId;
-            }
-
-            var header = httpContext.Request.Headers[TenantIdHeader].FirstOrDefault();
-            if (!string.IsNullOrEmpty(header) && Guid.TryParse(header, out var fromHeader))
-            {
-                _tenantId = fromHeader;
                 return _tenantId;
             }
 
