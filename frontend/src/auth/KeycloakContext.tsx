@@ -11,7 +11,7 @@ type KeycloakContextValue = {
   keycloak: Keycloak
   initialized: boolean
   authenticated: boolean
-  login: () => void
+  login: (options?: { loginHint?: string; redirectUri?: string }) => void
   loginWithGoogle: () => void
   logout: () => void
   token: string | undefined
@@ -39,7 +39,8 @@ export function KeycloakProvider({
       .catch(() => setInitialized(true))
   }, [keycloak])
 
-  const login = () => keycloak.login()
+  const login = (options?: { loginHint?: string; redirectUri?: string }) =>
+    keycloak.login(options && (options.loginHint || options.redirectUri) ? options : undefined)
   const loginWithGoogle = () => keycloak.login({ idpHint: 'google' })
   const logout = () => {
     const redirectUri = typeof window !== 'undefined' ? `${window.location.origin}/` : undefined

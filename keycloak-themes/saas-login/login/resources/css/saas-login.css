@@ -1,0 +1,199 @@
+/* Tema saas-login: layout centralizado, card com largura limitada */
+
+/* Esconde o nome do realm (ex.: "saas" minúsculo) acima de "Sign in to your account" */
+#kc-logo-text,
+.kc-logo-text,
+#kc-header .kc-logo-text,
+[id="kc-logo-text"],
+#kc-current-realm,
+.kc-realm-name {
+  display: none !important;
+}
+
+/* Fundo e centralização do layout (template não ocupa toda a largura da tela) */
+body.login-pf,
+.login-pf body {
+  background: #f1f5f9;
+  padding: 1.5rem 1rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Centraliza e limita a largura – todo o bloco de login em coluna central */
+#kc-container,
+#kc-content,
+.kc-login-container,
+.login-pf .container-fluid,
+.pf-c-login__main,
+.pf-c-login__container,
+.login-pf .row,
+.login-pf .col-md-6,
+.login-pf .col-md-8,
+.login-pf .col-lg-6,
+.login-pf .col-sm-8,
+.login-pf .col-sm-10 {
+  max-width: 420px !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.login-pf .container-fluid {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* Card do formulário – largura fixa, centralizado */
+.card-pf,
+.pf-c-login__main,
+.kc-form-card {
+  max-width: 420px !important;
+  width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+  padding: 2rem;
+}
+
+/* Título e subtítulo – centralizados */
+#kc-header,
+#kc-page-title,
+.kc-login-title,
+.login-pf-page-header,
+.pf-c-login__header,
+.kc-form-header {
+  text-align: center !important;
+  width: 100%;
+}
+
+.login-pf-page-header h1,
+.login-pf-page-header h2,
+.pf-c-login__header h1,
+.pf-c-login__header h2,
+#kc-header-wrapper,
+#kc-content-wrapper .kc-form-card h1,
+.kc-form-card .kc-form-header,
+.login-pf h1,
+.login-pf h2 {
+  text-align: center !important;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.login-pf-page-header {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.login-pf-page-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 0.25rem 0;
+}
+
+.login-pf h2 {
+  font-size: 0.9375rem;
+  color: #64748b;
+  margin: 0;
+  text-align: center;
+}
+
+/* Inputs */
+.pf-c-form-control,
+.pf-c-form-control:focus {
+  border-radius: 8px;
+  border-color: #e2e8f0;
+  padding: 0.625rem 0.875rem;
+  font-size: 0.9375rem;
+}
+
+.pf-c-form-control:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  outline: none;
+}
+
+/* Botão primário (Entrar) */
+.pf-c-button.pf-m-primary {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  background: #3b82f6;
+  border: none;
+}
+
+.pf-c-button.pf-m-primary:hover {
+  background: #2563eb;
+}
+
+/* Seção "Ou continue com" e botão Login with Google */
+.kc-social-section,
+.pf-c-login__main-footer-links,
+.kc-form-options-wrapper {
+  margin-top: 1.25rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: 0.9375rem;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.kc-social-section .kc-social-provider-logo + span,
+.kc-social-item {
+  font-size: 0.9375rem;
+}
+
+/* Botões de IdP (ex.: Continuar com Google / Sign in with Google) */
+.kc-social-item,
+.pf-c-button.pf-m-control.pf-m-block,
+a.kc-social-item {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #1e293b;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.kc-social-item:hover,
+.pf-c-button.pf-m-control.pf-m-block:hover,
+a.kc-social-item:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #1e293b;
+}
+
+/* Links (Cadastrar, etc.) */
+.pf-c-login__main-footer-links-item-link,
+.login-pf-signup a {
+  font-weight: 500;
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.pf-c-login__main-footer-links-item-link:hover,
+.login-pf-signup a:hover {
+  text-decoration: underline;
+}
+
+/* Alertas */
+.pf-c-alert {
+  border-radius: 8px;
+}

@@ -2,8 +2,8 @@ import { FluentProvider, webLightTheme } from '@fluentui/react-components'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Keycloak from 'keycloak-js'
 import { KeycloakProvider, useKeycloak } from './auth/KeycloakContext'
-import Home from './pages/Home'
 import Dashboard from './pages/Dashboard'
+import Home from './pages/Home'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import AdminLayout from './pages/admin/AdminLayout'
@@ -41,7 +41,7 @@ function AppRoutes() {
           authenticated ? (
             <Dashboard />
           ) : (
-            <Navigate to="/login" replace state={{ from: { pathname: '/dashboard' } }} />
+            <Navigate to="/" replace state={{ from: { pathname: '/dashboard' } }} />
           )
         }
       />
@@ -51,7 +51,7 @@ function AppRoutes() {
           authenticated ? (
             <AdminLayout />
           ) : (
-            <Navigate to="/login" replace state={{ from: { pathname: '/admin' } }} />
+            <Navigate to="/" replace state={{ from: { pathname: '/admin' } }} />
           )
         }
       >

@@ -1,8 +1,11 @@
 # Configuração Keycloak (multi-tenant)
 
-Após subir os containers (`docker compose up -d`), acesse o Keycloak em http://localhost:8080 (admin / admin).
+Após subir os containers (`docker compose up -d`), você pode configurar o Keycloak de duas formas:
 
-**Importante:** siga a ordem abaixo. Se você tentar fazer login no frontend **antes** de criar o realm e o client, a página do Keycloak pode exibir **"We're sorry"** (realm ou rota inexistente).
+- **Via script (recomendado):** execute `node scripts/keycloak-setup.mjs` (requer Node.js 18+). O script cria o realm, os clients, o scope `tenant_id`, a role `user` e demais itens via Admin REST API. Veja [scripts/README.md](../scripts/README.md).
+- **Via interface:** siga as etapas manuais abaixo.
+
+**Importante:** se você tentar fazer login no frontend **antes** de criar o realm e o client, a página do Keycloak pode exibir **"We're sorry"** (realm ou rota inexistente).
 
 ## 1. Criar o realm
 
@@ -144,13 +147,16 @@ Para que novos usuários recebam automaticamente uma realm role (ex.: `user`):
 
 ### 5.5 Identity Provider Google (login social)
 
-Para permitir **Entrar com Google**:
+O login (usuário/senha e **Continuar com Google**) ocorre apenas na tela do Keycloak. O frontend não exibe formulário de login: usuário deslogado é sempre redirecionado para o Keycloak, onde vê a tela com os campos e o botão do IdP Google (tema **saas-login**).
+
+Para permitir **Login with Google** / **Continuar com Google** na tela do Keycloak:
 
 1. **Identity providers** (menu lateral) → **Add provider** → **Google**.
 2. Preencha **Client ID** e **Client secret** (obtidos no [Google Cloud Console](https://console.cloud.google.com/) em credenciais OAuth 2.0).
 3. **Alias**: deixe `google` (o frontend usa `keycloak.login({ idpHint: 'google' })`).
 4. Salve. Configure os **Valid redirect URIs** no Google conforme a URL de callback do Keycloak (ex.: `http://localhost:8080/realms/saas/broker/google/endpoint`).
 5. Em **First login flow**, pode usar **first broker login**; para vincular conta existente ao Google, ative **Account linking** nas opções do IdP.
+6. (Opcional) Para o botão aparecer como **Continuar com Google** no tema saas-login: no IdP Google, em **Display name** (ou **Alias**), use `Continuar com Google` ou deixe `Google`; o tema já exibe o rótulo "Ou continue com" acima dos botões de IdP.
 
 ### 5.6 "Update Account Information" a cada login
 
@@ -160,6 +166,49 @@ Se o Keycloak pedir **nome e sobrenome** a cada login:
 - **Usuários criados pelo Google (ou já existentes)**:
   - Ao acessar a aplicação, o backend chama `GET /api/me`. Nessa chamada, a API preenche **firstName** e **lastName** no Keycloak a partir do token (claims `given_name` e `family_name`) e remove a ação **UPDATE_PROFILE**. Faça login e deixe o frontend carregar (ex.: abrir o Dashboard) uma vez; na próxima sessão o Keycloak não deve mais pedir.
 - **Desativar no realm (opcional):** **Realm settings** → **Required actions** → desmarque **Set as default action** em **Update profile** para que novos usuários (ex.: criados por IdP) não recebam essa ação por padrão.
+
+## 6. Tema de login customizado (saas-login)
+
+Quando o usuário clica em **Entrar** ou **Continuar com Google** no frontend, ele é redirecionado para a tela de login do Keycloak. O projeto inclui um tema de login customizado (**saas-login**) alinhado à tela de login da aplicação (card, cores, botões).
+
+### Estrutura do tema
+
+O tema está em `keycloak-themes/saas-login/`:
+
+```
+keycloak-themes/saas-login/
+  login/
+    theme.properties       # parent=keycloak, locales=pt-BR,en
+    resources/
+      css/
+        saas-login.css     # estilos (card, inputs, botões)
+    messages/
+      messages_pt_BR.properties
+      messages_en.properties
+```
+
+### Deploy do tema
+
+Os arquivos **docker-compose.dev.yml** e **docker-compose.prd.yml** já montam o tema no Keycloak:
+
+- Volume: `./keycloak-themes/saas-login:/opt/keycloak/themes/saas-login`
+
+Após subir os containers, o tema **saas-login** fica disponível no Keycloak.
+
+### Ativar o tema no realm
+
+**Opção A – Via script (recomendado)**  
+Ao executar `node scripts/keycloak-setup.mjs`, o script já define o tema de login do realm como **saas-login** (passo 10). Suba o Keycloak com o volume do tema montado (docker-compose já faz isso) e rode o script após o Keycloak estar no ar.
+
+**Opção B – Manualmente**  
+1. No Keycloak, abra **Realm settings** (menu lateral).  
+2. Aba **Themes**.  
+3. Em **Login theme**, selecione **saas-login**.  
+4. Salve.
+
+A partir daí, as telas de login do Keycloak (usuário/senha e redirecionamento para Google) usarão o visual do tema saas-login (fundo, card, textos em pt-BR/en).
+
+**Se o tema continuar padrão:** confira se o Keycloak foi iniciado com o volume `./keycloak-themes/saas-login` montado em `/opt/keycloak/themes/saas-login` (docker-compose.dev.yml e docker-compose.prd.yml já incluem isso). Reinicie o Keycloak após alterar o compose e execute de novo o script de setup ou altere o tema em Realm settings → Themes.
 
 ---
 

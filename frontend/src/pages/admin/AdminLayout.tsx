@@ -9,7 +9,7 @@ export default function AdminLayout() {
   const location = useLocation()
 
   if (!authenticated) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/" replace state={{ from: { pathname: location.pathname || '/admin' } }} />
   }
   if (loading) {
     return (
