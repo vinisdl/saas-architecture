@@ -91,17 +91,15 @@ export default function Signup() {
 
   return (
     <div className="page-center">
-      <div className="card-admin" style={{ maxWidth: 400 }}>
-        <Title3 style={{ margin: '0 0 1rem 0', fontSize: '1.5rem' }}>
-          Cadastro
-        </Title3>
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div className="card-admin signup-card">
+        <Title3 className="signup-card__title">Cadastro</Title3>
+        <form className="signup-form" onSubmit={handleSubmit}>
           {error && (
-            <MessageBar intent="error">
+            <MessageBar intent="error" className="signup-form__error">
               <MessageBarBody>{error}</MessageBarBody>
             </MessageBar>
           )}
-          <div>
+          <div className="signup-form__field">
             <Label htmlFor="firstName">Nome</Label>
             <Input
               id="firstName"
@@ -112,7 +110,7 @@ export default function Signup() {
               disabled={submitting}
             />
           </div>
-          <div>
+          <div className="signup-form__field">
             <Label htmlFor="lastName">Sobrenome</Label>
             <Input
               id="lastName"
@@ -123,7 +121,7 @@ export default function Signup() {
               disabled={submitting}
             />
           </div>
-          <div>
+          <div className="signup-form__field">
             <Label htmlFor="email">E-mail</Label>
             <Input
               id="email"
@@ -135,7 +133,7 @@ export default function Signup() {
               disabled={submitting}
             />
           </div>
-          <div>
+          <div className="signup-form__field">
             <Label htmlFor="password">Senha</Label>
             <Input
               id="password"
@@ -147,7 +145,7 @@ export default function Signup() {
               disabled={submitting}
             />
           </div>
-          <div>
+          <div className="signup-form__field">
             <Label htmlFor="confirmPassword">Confirmação de senha</Label>
             <Input
               id="confirmPassword"
@@ -159,28 +157,28 @@ export default function Signup() {
               disabled={submitting}
             />
           </div>
-          <div>
+          <div className="signup-form__terms">
             <Checkbox
               id="acceptTerms"
               checked={acceptTerms}
               onChange={(_, d) => setAcceptTerms(!!d.checked)}
               label={
-                <span>
+                <span className="signup-form__terms-label">
                   Aceito os{' '}
-                  <a href="/terms" target="_blank" rel="noopener noreferrer">
+                  <Link to="/terms" target="_blank" rel="noopener noreferrer">
                     Termos de Uso
-                  </a>{' '}
+                  </Link>{' '}
                   e a{' '}
-                  <a href="/privacy" target="_blank" rel="noopener noreferrer">
+                  <Link to="/privacy" target="_blank" rel="noopener noreferrer">
                     Política de Privacidade
-                  </a>
+                  </Link>
                   .
                 </span>
               }
               disabled={submitting}
             />
           </div>
-          <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
+          <div className="signup-form__actions">
             <Button
               appearance="primary"
               type="submit"

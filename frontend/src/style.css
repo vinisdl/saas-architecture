@@ -361,6 +361,208 @@ a:hover {
   font-weight: 600 !important;
 }
 
+/* ========== Página de Cadastro – layout alinhado à esquerda ========== */
+/* Sobrescreve .page-center .card-admin { text-align: center } */
+.page-center .signup-card,
+.page-center .card-admin.signup-card {
+  text-align: left !important;
+}
+
+.signup-card {
+  max-width: 400px !important;
+  width: 100%;
+  text-align: left !important;
+}
+
+.signup-card__title {
+  margin: 0 0 1.25rem 0 !important;
+  font-size: 1.5rem !important;
+  display: block;
+  text-align: left !important;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-items: stretch;
+  text-align: left !important;
+}
+
+.signup-form__error {
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.signup-form__field {
+  margin-bottom: 1rem;
+  text-align: left !important;
+}
+
+.signup-form__field label {
+  display: block !important;
+  margin-bottom: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--header-text);
+  text-align: left !important;
+}
+
+.signup-form__field input,
+.signup-form__field .fui-Input,
+.signup-form__field [class*="Input"] {
+  width: 100% !important;
+  max-width: 100%;
+  box-sizing: border-box;
+  text-align: left !important;
+}
+
+.signup-form__field input::placeholder {
+  text-align: left;
+}
+
+.signup-form .fui-Input input,
+.signup-form input {
+  text-align: left !important;
+}
+
+.signup-form__terms {
+  margin-bottom: 1.25rem;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  flex-direction: row;
+  gap: 0.5rem;
+  text-align: left !important;
+  width: 100%;
+}
+
+/* Checkbox: alinha ícone e label no topo, em fila */
+.signup-form__terms .fui-Checkbox,
+.signup-form__terms [class*="Checkbox"] {
+  margin-top: 0.15rem;
+  flex-shrink: 0;
+  display: inline-flex !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+}
+
+.signup-form__terms label {
+  text-align: left !important;
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+  display: flex !important;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0 !important;
+  padding: 0;
+}
+
+/* Span "Aceito os Termos de Uso" alinhado à esquerda, ao lado do checkbox */
+.signup-form__terms .signup-form__terms-label,
+.signup-form__terms-label {
+  font-size: 0.875rem;
+  color: var(--header-text);
+  line-height: 1.45;
+  text-align: left !important;
+  display: block !important;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Fluent UI: wrappers de Input e Checkbox alinhados à esquerda */
+.signup-form__field [class^="fui-"],
+.signup-form__field [class*="fui-"] {
+  width: 100% !important;
+  text-align: left !important;
+}
+
+.signup-form__terms [class^="fui-"],
+.signup-form__terms [class*="fui-"] {
+  justify-content: flex-start !important;
+  text-align: left !important;
+  align-items: flex-start !important;
+}
+
+.signup-form__terms-label a {
+  font-weight: 500;
+}
+
+.signup-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.25rem;
+}
+
+.signup-form__actions button,
+.signup-form__actions a {
+  flex-shrink: 0;
+}
+
+/* ========== Termos de Uso e Política de Privacidade ========== */
+.legal-page {
+  min-height: 100vh;
+  background: var(--main-bg);
+  padding: 2rem 1.5rem;
+}
+
+.legal-page__container {
+  max-width: 720px;
+  margin: 0 auto;
+  background: var(--card-bg);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  border: 1px solid var(--card-border);
+  padding: 2rem;
+}
+
+.legal-page__back {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  font-size: 0.9375rem;
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.legal-page__back:hover {
+  text-decoration: underline;
+  color: var(--primary-hover);
+}
+
+.legal-page__title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--header-text);
+}
+
+.legal-page__updated {
+  margin: 0 0 2rem 0;
+  font-size: 0.875rem;
+  color: var(--neutral-text);
+}
+
+.legal-page__section {
+  margin-bottom: 1.75rem;
+}
+
+.legal-page__section h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--header-text);
+}
+
+.legal-page__section p {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--header-text);
+}
+
 .loading {
   min-height: 100vh;
   display: flex;

@@ -6,6 +6,8 @@ import Dashboard from './pages/Dashboard'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import TermosUso from './pages/TermosUso'
+import PoliticaPrivacidade from './pages/PoliticaPrivacidade'
 import AdminLayout from './pages/admin/AdminLayout'
 import AdminTenants from './pages/admin/AdminTenants'
 import AdminUsers from './pages/admin/AdminUsers'
@@ -35,6 +37,8 @@ function AppRoutes() {
       />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
+      <Route path="/terms" element={<TermosUso />} />
+      <Route path="/privacy" element={<PoliticaPrivacidade />} />
       <Route
         path="/dashboard"
         element={
