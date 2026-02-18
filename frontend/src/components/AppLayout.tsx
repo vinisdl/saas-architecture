@@ -54,7 +54,7 @@ export default function AppLayout({ title, children, activeNav = 'dashboard' }: 
             <div className="sidebar-user-avatar">{getInitials(me.sub)}</div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontWeight: 600, color: 'var(--sidebar-text)' }}>
-                Usuário
+                {me.name ?? me.givenName ?? 'Usuário'}
               </div>
               <div style={{ fontSize: '0.75rem', color: 'var(--sidebar-text-muted)' }}>
                 {me.isAdmin ? 'Administrador' : 'Usuário'}

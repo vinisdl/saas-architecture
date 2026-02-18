@@ -4,6 +4,9 @@ export type MeResponse = {
   sub: string
   isAdmin: boolean
   tenantId?: string
+  name?: string | null
+  givenName?: string | null
+  familyName?: string | null
 }
 
 export async function fetchMe(token: string | undefined): Promise<MeResponse | null> {

@@ -72,6 +72,8 @@ public class MeController : ControllerBase
 
         var adminUserId = _configuration["Keycloak:AdminUserId"] ?? "";
         var isAdmin = string.Equals(sub, adminUserId, StringComparison.OrdinalIgnoreCase);
-        return Ok(new { sub, isAdmin, tenantId });
+        var name = string.Join(" ", new[] { givenName?.Trim(), familyName?.Trim() }.Where(s => !string.IsNullOrEmpty(s))).Trim();
+        if (string.IsNullOrEmpty(name)) name = null;
+        return Ok(new { sub, isAdmin, tenantId, name, givenName, familyName });
     }
 }
