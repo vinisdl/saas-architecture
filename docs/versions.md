@@ -4,10 +4,11 @@ Registro das versões utilizadas para reprodutibilidade.
 
 ## Backend (.NET)
 
-- **SDK / Runtime**: .NET 9 (9.0.x) — utilizada na implementação (SDK 10 não instalado). Plano prevê upgrade para .NET 10.
-- **Target framework**: `net9.0`
-- **global.json**: em `backend/global.json` (rollForward: latestFeature)
-- **Pacotes principais**: ASP.NET Core, EF Core, MediatR, RabbitMQ.Client, JWT Bearer — últimas estáveis compatíveis com .NET 10
+- **SDK / Runtime**: .NET 10 (10.0.x)
+- **Linguagem**: C# 14
+- **Target framework**: `net10.0`
+- **global.json**: em `backend/global.json` (versão 10.0.100, rollForward: latestFeature)
+- **Pacotes principais**: ASP.NET Core 10, EF Core 10, MediatR, Npgsql.EntityFrameworkCore.PostgreSQL 10, RabbitMQ.Client, JWT Bearer — compatíveis com .NET 10
 
 ## Frontend
 
@@ -21,9 +22,9 @@ Registro das versões utilizadas para reprodutibilidade.
 - **PostgreSQL**: 16 (imagem oficial)
 - **Keycloak**: imagem oficial (latest ou tag estável)
 - **RabbitMQ**: imagem oficial (latest ou tag estável)
-- **Backend runtime**: `mcr.microsoft.com/dotnet/aspnet:10.0`
-- **Backend build**: `mcr.microsoft.com/dotnet/sdk:10.0`
+- **Backend (produção)**: build `mcr.microsoft.com/dotnet/sdk:10.0`, runtime `mcr.microsoft.com/dotnet/aspnet:10.0` (ver `backend/src/SaaS.API/Dockerfile`)
+- **Backend (desenvolvimento)**: `mcr.microsoft.com/dotnet/sdk:10.0-alpine` com hot reload (ver `backend/src/SaaS.API/Dockerfile.dev`)
 - **Frontend build**: Node LTS
 - **Frontend serve**: Nginx Alpine
 
-Atualizado na data de início do projeto. Consultar [dotnet.microsoft.com/download](https://dotnet.microsoft.com/download) e [react.dev](https://react.dev) para versões atuais.
+Consultar [dotnet.microsoft.com/download](https://dotnet.microsoft.com/download) e [react.dev](https://react.dev) para versões atuais.

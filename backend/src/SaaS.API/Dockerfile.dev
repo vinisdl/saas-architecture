@@ -1,5 +1,5 @@
 # Desenvolvimento com hot reload (dotnet watch)
-FROM mcr.microsoft.com/dotnet/sdk:9.0-alpine
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine
 WORKDIR /app
 
 # Restore depende dos .csproj; o código fonte é montado via volume

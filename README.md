@@ -30,7 +30,7 @@ Arquitetura de referência para aplicações SaaS multi-tenant: backend em .NET,
 | Camada         | Tecnologia                    |
 |----------------|-------------------------------|
 | Banco de dados | PostgreSQL 16                 |
-| Backend        | C# (.NET 9), ASP.NET Core     |
+| Backend        | C# 14 (.NET 10), ASP.NET Core |
 | Frontend       | React 19, Vite 7              |
 | Autenticação   | Keycloak (OIDC/JWT)          |
 | Mensageria     | RabbitMQ                     |
@@ -87,7 +87,7 @@ flowchart TB
 
 ## Pré-requisitos
 
-- [.NET 9 SDK](https://dotnet.microsoft.com/download)
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 - [Node.js](https://nodejs.org/) LTS (para o frontend)
 - [Docker](https://docs.docker.com/get-docker/) e [Docker Compose](https://docs.docker.com/compose/install/)
 
